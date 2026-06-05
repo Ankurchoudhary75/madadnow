@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: madadnow-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: madadnow
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - madadnow-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: madadnow-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - madadnow-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: madadnow-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/madadnow
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres123
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+    depends_on:
+      - db
+      - redis
+    networks:
+      - madadnow-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: madadnow-frontend
+    ports:
+      - "5173:80" # Map 5173 to container's port 80 (nginx) so it matches Vite's dev port
+    depends_on:
+      - backend
+    networks:
+      - madadnow-network
+
+volumes:
+  pgdata:
+
+networks:
+  madadnow-network:
+    driver: bridge

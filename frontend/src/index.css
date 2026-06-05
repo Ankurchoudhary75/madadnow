@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-[#0f0f11] text-white;
+}
+
+.glass {
+  @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl;
+}
+
+.btn-primary {
+  @apply bg-indigo-500 hover:bg-indigo-600 transition rounded-full py-3 px-6;
+}
+
+.btn-danger {
+  @apply bg-red-500 hover:bg-red-600 transition rounded-full py-3 px-6;
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-3px);
+}
