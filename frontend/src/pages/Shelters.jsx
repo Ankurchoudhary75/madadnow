@@ -30,6 +30,25 @@ export default function Shelters() {
     const [fetchError, setFetchError] = useState(null);
     const [activeDestination, setActiveDestination] = useState(null);
     const [showGuidelines, setShowGuidelines] = useState(false);
+    const [language, setLanguage] = useState("en");
+
+    const t = (text) => {
+        if (language === "en") return text;
+        const dict = {
+            "Disaster": "आपदा",
+            "Resources": "संसाधन",
+            "Access verified shelters, local authorities, and national helplines based on your live location.": "अपने लाइव स्थान के आधार पर सत्यापित आश्रयों, स्थानीय अधिकारियों और हेल्पलाइनों तक पहुंचें।",
+            "Shelters": "आश्रय",
+            "Hospitals": "अस्पताल",
+            "Police": "पुलिस",
+            "NGOs": "एनजीओ",
+            "Helplines": "हेल्पलाइन",
+            "Safety Guidelines (Do's & Don'ts)": "सुरक्षा दिशानिर्देश",
+            "List": "सूची",
+            "Map": "नक्शा"
+        };
+        return dict[text] || text;
+    };
     
     const [userLocation, setUserLocation] = useState({
         lat: 28.61,
@@ -181,9 +200,11 @@ export default function Shelters() {
                     transition={{ delay: 0.1 }}
                     className="flex flex-wrap items-center justify-between gap-4 mb-8"
                 >
-                    <button className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl text-sm font-bold text-gray-300 transition-colors">
+                    <button 
+                        onClick={() => setLanguage(l => l === "en" ? "hi" : "en")}
+                        className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl text-sm font-bold text-gray-300 transition-colors">
                         <Globe className="w-4 h-4 text-indigo-400" />
-                        English / हिंदी
+                        {language === "en" ? "English / हिंदी" : "हिंदी / English"}
                     </button>
 
                     <button 
@@ -191,7 +212,7 @@ export default function Shelters() {
                         className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 border border-indigo-500/50 px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg transition-colors"
                     >
                         <BookOpen className="w-4 h-4" />
-                        Safety Guidelines (Do's & Don'ts)
+                        {t("Safety Guidelines (Do's & Don'ts)")}
                     </button>
                 </motion.div>
 
@@ -202,10 +223,10 @@ export default function Shelters() {
                 >
                     <div className="flex-1">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-                            Disaster <span className="text-indigo-400">Resources</span>
+                            {t("Disaster")} <span className="text-indigo-400">{t("Resources")}</span>
                         </h1>
                         <p className="text-gray-400 text-base md:text-lg max-w-xl">
-                            Access verified shelters, local authorities, and national helplines based on your live location.
+                            {t("Access verified shelters, local authorities, and national helplines based on your live location.")}
                         </p>
                     </div>
 
@@ -216,35 +237,35 @@ export default function Shelters() {
                             className={`flex-1 min-w-[90px] px-3 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 ${category === "shelters" ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
                         >
                             <HomeIcon className="w-4 h-4 md:w-5 md:h-5" />
-                            <span className="hidden sm:inline">Shelters</span>
+                            <span className="hidden sm:inline">{t("Shelters")}</span>
                         </button>
                         <button
                             onClick={() => { setCategory("hospitals"); setView("list"); }}
                             className={`flex-1 min-w-[90px] px-3 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 ${category === "hospitals" ? "bg-gradient-to-r from-rose-600 to-rose-500 text-white shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
                         >
                             <HeartPulse className="w-4 h-4 md:w-5 md:h-5" />
-                            <span className="hidden sm:inline">Hospitals</span>
+                            <span className="hidden sm:inline">{t("Hospitals")}</span>
                         </button>
                         <button
                             onClick={() => { setCategory("police"); setView("list"); }}
                             className={`flex-1 min-w-[90px] px-3 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 ${category === "police" ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
                         >
                             <Shield className="w-4 h-4 md:w-5 md:h-5" />
-                            <span className="hidden sm:inline">Police</span>
+                            <span className="hidden sm:inline">{t("Police")}</span>
                         </button>
                         <button
                             onClick={() => { setCategory("ngos"); setView("list"); }}
                             className={`flex-1 min-w-[90px] px-3 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 ${category === "ngos" ? "bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
                         >
                             <Users className="w-4 h-4 md:w-5 md:h-5" />
-                            <span className="hidden sm:inline">NGOs</span>
+                            <span className="hidden sm:inline">{t("NGOs")}</span>
                         </button>
                         <button
                             onClick={() => { setCategory("helplines"); setView("list"); }}
                             className={`flex-1 min-w-[90px] px-3 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 ${category === "helplines" ? "bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
                         >
                             <PhoneCall className="w-4 h-4 md:w-5 md:h-5" />
-                            <span className="hidden sm:inline">Helplines</span>
+                            <span className="hidden sm:inline">{t("Helplines")}</span>
                         </button>
                     </div>
                 </motion.div>
@@ -261,7 +282,7 @@ export default function Shelters() {
                                 onClick={() => setView("list")}
                                 className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all ${view === "list" ? "bg-white/20 text-white shadow-sm" : "text-gray-500 hover:text-gray-300 hover:bg-white/5"}`}
                             >
-                                <List className="w-4 h-4" /> List
+                                <List className="w-4 h-4" /> {t("List")}
                             </button>
                             <button
                                 onClick={() => {
@@ -272,7 +293,7 @@ export default function Shelters() {
                                 }}
                                 className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all ${view === "map" ? "bg-white/20 text-white shadow-sm" : "text-gray-500 hover:text-gray-300 hover:bg-white/5"}`}
                             >
-                                <MapIcon className="w-4 h-4" /> Map
+                                <MapIcon className="w-4 h-4" /> {t("Map")}
                             </button>
                         </div>
                     </motion.div>
