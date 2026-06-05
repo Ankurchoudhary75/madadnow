@@ -31,6 +31,21 @@ export default function Shelters() {
     const [activeDestination, setActiveDestination] = useState(null);
     const [showGuidelines, setShowGuidelines] = useState(false);
     const [language, setLanguage] = useState("en");
+    const [alertIndex, setAlertIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setAlertIndex(prev => (prev + 1) % 4);
+        }, 6000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const SACHET_ALERTS = [
+        "Heavy rainfall and localized flooding expected in your district over the next 24 hours. Move to higher ground or nearest safe shelter immediately. Do not travel unless absolutely necessary.",
+        "Earthquake magnitude 4.5 detected in the Northern region. Prepare for possible aftershocks and stay away from weak structures.",
+        "Severe heatwave warning issued. Stay hydrated, remain indoors, and avoid direct sunlight between 12 PM and 4 PM.",
+        "Flash flood warning in low-lying areas. Do not attempt to cross flooded roads. Follow local authority instructions immediately."
+    ];
 
     const t = (text) => {
         if (language === "en") return text;
@@ -45,11 +60,16 @@ export default function Shelters() {
             "Helplines": "हेल्पलाइन",
             "Safety Guidelines (Do's & Don'ts)": "सुरक्षा दिशानिर्देश",
             "List": "सूची",
-            "Map": "नक्शा"
+            "Map": "नक्शा",
+            "SACHET ALERT": "सचेत अलर्ट",
+            "LIVE": "लाइव",
+            "Heavy rainfall and localized flooding expected in your district over the next 24 hours. Move to higher ground or nearest safe shelter immediately. Do not travel unless absolutely necessary.": "अगले 24 घंटों में आपके जिले में भारी बारिश और बाढ़ की आशंका है। तुरंत सुरक्षित स्थान या निकटतम आश्रय में चले जाएं।",
+            "Earthquake magnitude 4.5 detected in the Northern region. Prepare for possible aftershocks and stay away from weak structures.": "उत्तरी क्षेत्र में 4.5 तीव्रता का भूकंप आया है। संभावित झटकों के लिए तैयार रहें और कमजोर संरचनाओं से दूर रहें।",
+            "Severe heatwave warning issued. Stay hydrated, remain indoors, and avoid direct sunlight between 12 PM and 4 PM.": "भीषण लू की चेतावनी जारी। हाइड्रेटेड रहें, घर के अंदर रहें और दोपहर 12 बजे से शाम 4 बजे के बीच सीधी धूप से बचें।",
+            "Flash flood warning in low-lying areas. Do not attempt to cross flooded roads. Follow local authority instructions immediately.": "निचले इलाकों में अचानक बाढ़ की चेतावनी। बाढ़ वाली सड़कों को पार करने का प्रयास न करें। तुरंत स्थानीय अधिकारियों के निर्देशों का पालन करें।"
         };
         return dict[text] || text;
     };
-    
     const [userLocation, setUserLocation] = useState({
         lat: 28.61,
         lng: 77.20,
@@ -183,13 +203,22 @@ export default function Shelters() {
                     <div className="bg-red-500/20 p-2.5 rounded-xl border border-red-500/30 animate-pulse shrink-0">
                         <AlertTriangle className="w-6 h-6 text-red-400" />
                     </div>
-                    <div>
+                    <div className="flex-1 overflow-hidden">
                         <h3 className="font-black text-red-100 tracking-wide uppercase text-sm md:text-base mb-1 flex items-center gap-2">
-                            SACHET ALERT <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">LIVE</span>
+                            {t("SACHET ALERT")} <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">{t("LIVE")}</span>
                         </h3>
-                        <p className="text-red-200/90 text-xs md:text-sm font-medium">
-                            Heavy rainfall and localized flooding expected in your district over the next 24 hours. Move to higher ground or nearest safe shelter immediately. Do not travel unless absolutely necessary.
-                        </p>
+                        <AnimatePresence mode="wait">
+                            <motion.p 
+                                key={alertIndex}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.3 }}
+                                className="text-red-200/90 text-xs md:text-sm font-medium h-[40px] md:h-auto overflow-hidden"
+                            >
+                                {t(SACHET_ALERTS[alertIndex])}
+                            </motion.p>
+                        </AnimatePresence>
                     </div>
                 </motion.div>
 
